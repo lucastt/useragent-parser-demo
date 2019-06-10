@@ -1,11 +1,11 @@
 version: "3.7"
 services:
 
-  gateway:
+  useragent-parser-gateway:
     build: ./gateway
     image: gateway
     depends_on:
-      - rabbit
+      - useragent-parser-rabbit
     networks:
       - messaging
     ports:
@@ -15,18 +15,20 @@ services:
     environment:
      - FLASK_ENV=development
      - SCALE=1
+     - RETRY_DELAY=5
+     - CONNECTION_ATTEMPTS=10
 
-  rabbit:
+  useragent-parser-rabbit:
     image: rabbitmq:alpine
     networks:
       - messaging
 
-  worker:
+  useragent-parser-worker:
     build: ./worker
     image: worker
     depends_on:
-      - rabbit
-      - gateway
+      - useragent-parser-rabbit
+      - useragent-parser-gateway
     networks:
       - messaging
     volumes:
