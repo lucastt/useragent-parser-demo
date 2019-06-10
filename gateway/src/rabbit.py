@@ -6,8 +6,8 @@ def _get_channel():
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
             'rabbit',
-            retry_delay=os.environ['retry_delay'],
-            connection_attempts=os.environ['CONNECTION_ATTEMPTS']
+            retry_delay=int(os.environ['RETRY_DELAY']),
+            connection_attempts=int(os.environ['CONNECTION_ATTEMPTS'])
         )
     )
     channel = connection.channel()
@@ -16,13 +16,13 @@ def _get_channel():
 
 def setup():
     channel, connection = _get_channel()
-    for index in range(os.environ['SCALE'] + 1):
+    for index in range(int(os.environ['SCALE']) + 1):
         channel.queue_declare(queue=str(index))
     connection.close()
 
 
 # Use decorators to start and end the connection 
-def send(message, queue_id='1'):
+def send(queue_id, message):
     channel, connection = _get_channel()
     channel.basic_publish(exchange='',
                           routing_key=queue_id,

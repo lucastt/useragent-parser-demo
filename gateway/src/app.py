@@ -10,5 +10,6 @@ app = Flask(__name__)
 @app.route("/")
 def hello():
     user_agent = request.headers.get('User-Agent')
-    rabbit.send(user_agent, random.randint(1, os.environ['SCALE']))
+    queue = random.randint(1, int(os.environ['SCALE']))
+    rabbit.send(str(queue), user_agent)
     return "Testing user agent stuff"
