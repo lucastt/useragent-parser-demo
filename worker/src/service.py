@@ -2,11 +2,11 @@ import os
 import random
 from rabbit import consume
 
-queue_id = random.randint(1, os.environ['SCALE'])
+queue_id = random.randint(1, int(os.environ['SCALE']))
 
 
 def main():
-    consume(queue_id, callback)
+    consume(str(queue_id), callback)
 
 
 def callback(ch, method, properties, body):

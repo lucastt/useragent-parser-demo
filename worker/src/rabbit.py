@@ -1,3 +1,4 @@
+import os
 import pika
 
 
@@ -5,8 +6,8 @@ def _get_channel():
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
             'rabbit',
-            retry_delay=5,
-            connection_attempts=10
+            retry_delay=int(os.environ['RETRY_DELAY']),
+            connection_attempts=int(os.environ['CONNECTION_ATTEMPTS'])
         )
     )
     channel = connection.channel()
