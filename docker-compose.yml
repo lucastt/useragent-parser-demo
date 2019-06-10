@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+
+  gateway:
+    build: ./gateway
+    image: gateway
+    depends_on:
+      - rabbit
+    networks:
+      - messaging
+    ports:
+     - "5000:5000"
+    volumes:
+     - ./gateway/src:/usr/src/app/
+    environment:
+     - FLASK_ENV=development
+     - SCALE=1
+
+  rabbit:
+    image: rabbitmq:alpine
+    networks:
+      - messaging
+
+  worker:
+    build: ./worker
+    image: worker
+    depends_on:
+      - rabbit
+      - gateway
+    networks:
+      - messaging
+    volumes:
+      - ./worker/src:/usr/src/app/
+    environment:
+     - SCALE=1
+     - RETRY_DELAY=5
+     - CONNECTION_ATTEMPTS=10
+
+networks:
+  messaging:
