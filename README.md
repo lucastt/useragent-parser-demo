@@ -15,7 +15,7 @@ Simple application that gets the user agent from anyone who access the app and c
 
  TO BE DONE
  
-**To simple build the app:**
+**To just build the app:**
  
 ```
   ./scripts/devenv build
